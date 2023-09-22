@@ -1,6 +1,4 @@
 import NextAuth from "next-auth";
-import GithubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/User";
 import connect from "@/utils/db";
@@ -26,6 +24,7 @@ const handler = NextAuth({
               user.password
             );
 
+            console.log(isPasswordCorrect);
             if (isPasswordCorrect) {
               return user;
             } else {
@@ -39,19 +38,10 @@ const handler = NextAuth({
         }
       },
     }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
   ],
   pages: {
     error: "/dashboard/login",
   },
-
 });
 
 export { handler as GET, handler as POST };

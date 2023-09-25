@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 
 import {
@@ -20,11 +21,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  mutate: any;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  mutate,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -32,7 +35,10 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  useEffect(() => {console.log}, []);
+  useEffect(() => {
+    mutate();
+    console.log("aaaaaa");
+  }, [data]);
 
   return (
     <div className="rounded-md border">

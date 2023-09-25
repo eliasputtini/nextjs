@@ -36,17 +36,25 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => {
       console.log(row);
 
-      return <div className="text-right font-medium">a</div>;
+      return (
+        <div
+          className="text-right font-medium"
+          onClick={() => {
+            handleDelete(row.original._id);
+          }}
+        >
+          delete
+        </div>
+      );
     },
   },
 ];
 
-const handleDelete = async (id) => {
+const handleDelete = async (id: any) => {
   try {
     await fetch(`/api/posts/${id}`, {
       method: "DELETE",
     });
-    mutate();
   } catch (err) {
     console.log(err);
   }

@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 import React from "react";
 import useSWR from "swr";
@@ -22,7 +23,7 @@ const Dashboard = () => {
 
   const router = useRouter();
 
-  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const fetcher = (...args: any) => fetch(...args).then((res) => res.json());
 
   const { data, mutate, error, isLoading } = useSWR(
     `/api/posts?username=${session?.data?.user?.name}`,
@@ -36,7 +37,6 @@ const Dashboard = () => {
   if (session.status === "unauthenticated") {
     router?.push("/dashboard/login");
   }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const number = e.target[0].value;
@@ -65,7 +65,7 @@ const Dashboard = () => {
       console.log(err);
     }
   };
-
+  // @ts-ignore
   const handleDelete = async (id) => {
     try {
       await fetch(`/api/posts/${id}`, {
@@ -168,7 +168,7 @@ const Dashboard = () => {
             {isLoading ? (
               "loading"
             ) : (
-              <DataTable columns={columns} data={data.posts} />
+              <DataTable columns={columns} data={data.posts} mutate={mutate} />
             )}
           </div>
         </div>

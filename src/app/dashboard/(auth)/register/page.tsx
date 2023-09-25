@@ -16,7 +16,7 @@ const Register = () => {
 
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     const name = e.target[0].value;
@@ -37,7 +37,7 @@ const Register = () => {
       });
       res.status === 201 &&
         router.push("/dashboard/login?success=Account has been created");
-    } catch (err) {
+    } catch (err: any) {
       setError(err);
       console.log(err);
       setLoading(false);

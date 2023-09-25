@@ -35,11 +35,6 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  useEffect(() => {
-    mutate();
-    console.log("aaaaa");
-  }, [data]);
-
   return (
     <div className="rounded-md border">
       <Table>

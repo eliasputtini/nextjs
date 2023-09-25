@@ -1,6 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import Delete from "./delete";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -34,28 +35,7 @@ export const columns: ColumnDef<any>[] = [
     accessorKey: "",
     header: " ",
     cell: ({ row }) => {
-      console.log(row);
-
-      return (
-        <div
-          className="text-right font-medium"
-          onClick={() => {
-            handleDelete(row.original._id);
-          }}
-        >
-          delete
-        </div>
-      );
+      return <Delete id={row.original._id} />;
     },
   },
 ];
-
-const handleDelete = async (id: any) => {
-  try {
-    await fetch(`/api/posts/${id}`, {
-      method: "DELETE",
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};

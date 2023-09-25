@@ -19,21 +19,6 @@ const links = [
   },
   {
     id: 3,
-    title: "Blog",
-    url: "/blog",
-  },
-  {
-    id: 4,
-    title: "About",
-    url: "/about",
-  },
-  {
-    id: 5,
-    title: "Contact",
-    url: "/contact",
-  },
-  {
-    id: 6,
     title: "Dashboard",
     url: "/dashboard",
   },

@@ -169,6 +169,16 @@ const Dashboard = () => {
               "loading"
             ) : (
               <>
+                <div className="flex items-center justify-between mb-10">
+                  <h2 className="text-xl font-bold"> numero </h2>
+                  <h2 className="text-xl font-bold"> data </h2>
+                  <h2 className="text-xl font-bold"> data de pagamento </h2>
+                  <h2 className="text-xl font-bold"> empresa </h2>
+                  <h2 className="text-xl font-bold"> serviço </h2>
+                  <h2 className="text-xl font-bold"> valor </h2>
+                  <span className="cursor-pointer text-red-500">delete</span>
+                </div>
+
                 {data?.posts?.map((post) => {
                   return (
                     <div

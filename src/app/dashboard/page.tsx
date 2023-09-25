@@ -5,9 +5,6 @@ import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { DataTable } from "../../components/invoices/data-table";
-
-import { columns } from "../../components/invoices/columns";
 import {
   Dialog,
   DialogContent,
@@ -168,7 +165,29 @@ const Dashboard = () => {
             {isLoading ? (
               "loading"
             ) : (
-              <DataTable columns={columns} data={data.posts} mutate={mutate} />
+              <>
+                {data?.posts?.map((post) => {
+                  return (
+                    <div
+                      className="flex items-center justify-between mb-10"
+                      key={post._id}
+                    >
+                      <h2 className="text-xl font-bold">{post.number}</h2>
+                      <h2 className="text-xl font-bold">{post.date}</h2>
+                      <h2 className="text-xl font-bold">{post.payDate}</h2>
+                      <h2 className="text-xl font-bold">{post.company}</h2>
+                      <h2 className="text-xl font-bold">{post.jobType}</h2>
+                      <h2 className="text-xl font-bold">{post.value}</h2>
+                      <span
+                        className="cursor-pointer text-red-500"
+                        onClick={() => handleDelete(post._id)}
+                      >
+                        X
+                      </span>
+                    </div>
+                  );
+                })}
+              </>
             )}
           </div>
         </div>

@@ -2,6 +2,8 @@
 
 Teste de Front-end Controle de NF Freelancer
 
+Deploy link:
+
 [https://nextjs-snowy-five-32.vercel.app/](https://nextjs-snowy-five-32.vercel.app/)
 
 Projeto em [Next.js](https://nextjs.org/).

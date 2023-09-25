@@ -151,7 +151,10 @@ const Dashboard = () => {
                         autoCorrect="off"
                       />
                       <DialogTrigger asChild>
-                        <Button className="p-5 bg-[#e8505b] rounded text-white font-bold">
+                        <Button
+                          type="submit"
+                          className="p-5 bg-[#e8505b] rounded text-white font-bold"
+                        >
                           Send
                         </Button>
                       </DialogTrigger>

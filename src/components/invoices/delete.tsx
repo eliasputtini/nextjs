@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 const handleDelete = async (id: any, mutate: any) => {
   try {

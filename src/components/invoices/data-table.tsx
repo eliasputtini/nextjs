@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useEffect } from "react";
 
 import {
   Table,
@@ -30,6 +31,8 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  useEffect(() => {}, []);
 
   return (
     <div className="rounded-md border">

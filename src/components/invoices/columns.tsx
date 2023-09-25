@@ -8,30 +8,46 @@ import { ColumnDef } from "@tanstack/react-table";
 export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "number",
-    header: "Status",
-  },
-  {
-    accessorKey: "payDate",
-    header: "Status",
+    header: "NFS-e Number",
   },
   {
     accessorKey: "date",
-    header: "Status",
+    header: "Emission date",
   },
   {
     accessorKey: "payDate",
-    header: "Status",
+    header: "NFS-e Payday",
   },
   {
     accessorKey: "company",
-    header: "Status",
+    header: "Company",
   },
   {
     accessorKey: "jobType",
-    header: "Status",
+    header: "Service type",
   },
   {
     accessorKey: "value",
-    header: "Status",
+    header: "Value",
+  },
+  {
+    accessorKey: "",
+    header: " ",
+    cell: ({ row }) => {
+      console.log(row);
+
+      return <div className="text-right font-medium">a</div>;
+    },
   },
 ];
+
+const handleDelete = async (id) => {
+  try {
+    await fetch(`/api/posts/${id}`, {
+      method: "DELETE",
+    });
+    mutate();
+  } catch (err) {
+    console.log(err);
+  }
+};

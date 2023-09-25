@@ -8,11 +8,11 @@ const PostSchema = new Schema(
       type: String,
       required: true,
     },
-    payDate: {
+    date: {
       type: String,
       required: true,
     },
-    date: {
+    payDate: {
       type: String,
       required: true,
     },

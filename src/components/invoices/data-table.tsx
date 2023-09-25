@@ -37,7 +37,7 @@ export function DataTable<TData, TValue>({
 
   useEffect(() => {
     mutate();
-    console.log("aaaaaa");
+    console.log("aaaaa");
   }, [data]);
 
   return (

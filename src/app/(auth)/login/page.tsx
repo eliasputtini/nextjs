@@ -134,9 +134,20 @@ const Login = () => {
                 type="button"
                 disabled={session?.status === "loading"}
               >
-                <Link href="/dashboard/register">Create new account</Link>
+                <Link href="/register">Create new account</Link>
               </Button>
             </div>
+            <Button
+                variant="outline"
+                type="button"
+                disabled={session?.status === "loading"}
+                onClick={()=>{ signIn("credentials", {
+                  email:'teste@teste.com',
+                  password:'teste',
+                });}}
+              >
+                 Guest login 
+              </Button>
           </div>
         </div>
       </div>

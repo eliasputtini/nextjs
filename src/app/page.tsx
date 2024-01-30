@@ -13,7 +13,7 @@ export default function Home() {
           Otimize sua Gestão Financeira com o nosso organizador de Notas
           Fiscais.
         </p>
-        <Link href="/dashboard">
+        <Link href="/login">
           <Button> Cadastre uma Nota fiscal </Button>
         </Link>
       </div>

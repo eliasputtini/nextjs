@@ -141,7 +141,7 @@ const Register = () => {
                 </div>
               </div>
               <Button variant="outline" type="button" disabled={loading}>
-                <Link href="/dashboard/login">Login</Link>
+                <Link href="/login">Login</Link>
               </Button>
             </div>
           </div>

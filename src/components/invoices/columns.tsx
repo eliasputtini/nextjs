@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import Delete from "./delete";
+import { format } from "date-fns";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -14,6 +15,9 @@ export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "date",
     header: "Emission date",
+    cell: ({ row }) => {
+      return <p>{format(row.original.date, 'dd/MM/yyyy')}</p>;
+    },
   },
   {
     accessorKey: "payDate",

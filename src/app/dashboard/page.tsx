@@ -1,14 +1,31 @@
 //@ts-nocheck
 "use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { CalendarIcon } from "lucide-react";
+
+import { useState } from "react";
+
 import React from "react";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns"
+
+import {
+  Form,
+  FormField,
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -16,8 +33,35 @@ import {
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/invoices/data-table";
 import { columns } from "@/components/invoices/columns";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 
 const Dashboard = () => {
+  const [open, setOpen] = useState(false);
+  const formSchema = z.object({
+    number: z.string().min(2).max(50),
+    date: z.date({
+      required_error: "A date is required.",
+    }),
+    payDate: z.string().min(2).max(50),
+    company: z.string().min(2).max(50),
+    jobType: z.string().min(2).max(50),
+    value: z.string().min(2).max(50),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      number: "",
+      date: "",
+      payDate: "",
+      company: "",
+      jobType: "",
+      value: "",
+    },
+  });
+
   const session = useSession();
 
   const router = useRouter();
@@ -36,15 +80,9 @@ const Dashboard = () => {
   if (session.status === "unauthenticated") {
     router?.push("/login");
   }
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const number = e.target[0].value;
-    const date = e.target[1].value;
-    const payDate = e.target[2].value;
-    const company = e.target[3].value;
-    const jobType = e.target[4].value;
-    const value = e.target[5].value;
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { number, date, payDate, company, jobType, value } = values;
     try {
       await fetch("/api/posts", {
         method: "POST",
@@ -59,22 +97,11 @@ const Dashboard = () => {
         }),
       });
       mutate();
-      e.target.reset();
+      setOpen(false);
     } catch (err) {
       console.log(err);
     }
-  };
-  // @ts-ignore
-  const handleDelete = async (id) => {
-    try {
-      await fetch(`/api/posts/${id}`, {
-        method: "DELETE",
-      });
-      mutate();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  }
 
   if (session.status === "authenticated") {
     return (
@@ -88,80 +115,138 @@ const Dashboard = () => {
                 {81000 - data?.totalRevenue}
               </p>
             </div>
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger>
-                <Button className="p-5 bg-[#e8505b] rounded text-white font-bold">
+                <div className="p-5 bg-[#e8505b] rounded text-white font-bold">
                   Cadastre uma nota fiscal
-                </Button>
+                </div>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle className="py-3">
                     Cadastre uma nota fiscal
                   </DialogTitle>
-                  <DialogDescription>
+                  <Form {...form}>
                     <form
-                      className="flex-1 flex flex-col gap-4 m-auto"
-                      onSubmit={handleSubmit}
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-8"
                     >
-                      <Input
-                        id="number"
-                        placeholder="NFS-e number"
-                        required
-                        type="text"
-                        autoCapitalize="none"
-                        autoCorrect="off"
+                      <FormField
+                        control={form.control}
+                        name="number"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Number</FormLabel>
+                            <FormControl>
+                              <Input placeholder="NFS-e number" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                      <Input
-                        id="date"
-                        placeholder="NFS-e date"
-                        required
-                        type="text"
-                        autoCapitalize="none"
-                        autoCorrect="off"
+                      <FormField
+                        control={form.control}
+                        name="date"
+                        render={({ field }) => (<FormItem>
+                          <FormLabel>Date</FormLabel>
+                          <FormControl>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-[280px] justify-start text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  <CalendarIcon className="mr-2 h-4 w-4" />
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0">
+                                <Calendar
+                                  mode="single"
+                                  selected={field.value}
+                                  onSelect={field.onChange}
+                                  disabled={(date) =>
+                                    date > new Date() || date < new Date("1900-01-01")
+                                  }
+
+                                  initialFocus
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                        )}
                       />
-                      <Input
-                        id="payDate"
-                        placeholder="NFS-e payday"
-                        required
-                        type="text"
-                        autoCapitalize="none"
-                        autoCorrect="off"
+                      <FormField
+                        control={form.control}
+                        name="payDate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>payDate</FormLabel>
+                            <FormControl>
+                              <Input placeholder="NFS-e payday" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                      <Input
-                        id="company"
-                        placeholder="Company"
-                        required
-                        type="text"
-                        autoCapitalize="none"
-                        autoCorrect="off"
+                      <FormField
+                        control={form.control}
+                        name="company"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>company</FormLabel>
+                            <FormControl>
+                              <Input placeholder="company" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                      <Input
-                        id="jobType"
-                        placeholder="Type of Service Provided"
-                        required
-                        type="text"
-                        autoCapitalize="none"
-                        autoCorrect="off"
+                      <FormField
+                        control={form.control}
+                        name="jobType"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Type of Service Provided</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Type of Service Provided"
+                                {...field}
+                              />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                      <Input
-                        id="valor"
-                        placeholder="NFS-e value"
-                        required
-                        type="text"
-                        autoCapitalize="none"
-                        autoCorrect="off"
+                      <FormField
+                        control={form.control}
+                        name="value"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>valor</FormLabel>
+                            <FormControl>
+                              <Input placeholder="NFS-e value" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                      <DialogTrigger asChild>
-                        <Button
-                          type="submit"
-                          className="p-5 bg-[#e8505b] rounded text-white font-bold"
-                        >
-                          Send
-                        </Button>
-                      </DialogTrigger>
+                      <Button type="submit">Send</Button>
                     </form>
-                  </DialogDescription>
+                  </Form>
                 </DialogHeader>
               </DialogContent>
             </Dialog>
